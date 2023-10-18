@@ -191,3 +191,12 @@ let HKCategoryTypeIdentifierTitles: [HKCategoryTypeIdentifier] = [
     .vomiting,
     .wheezing,
 ]
+
+let HKCharacteristicTypeIdentifierTitles: [HKCharacteristicTypeIdentifier] = [
+    .activityMoveMode,
+    .biologicalSex,
+    .bloodType,
+    .dateOfBirth,
+    .fitzpatrickSkinType,
+    .wheelchairUse
+]

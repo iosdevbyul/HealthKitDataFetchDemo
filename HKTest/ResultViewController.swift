@@ -42,10 +42,11 @@ class ResultViewController: UIViewController {
         resultLabel.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
         resultLabel.numberOfLines = 0
         resultLabel.textAlignment = .center
+        resultLabel.textColor = .brown
     }
 
     deinit {
-        print("ResultVC deinit")
+//        print("ResultVC deinit")
     }
 
 }

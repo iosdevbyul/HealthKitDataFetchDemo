@@ -16,7 +16,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        print(HKQuantityTypeIdentifier.basalBodyTemperature.rawValue)
         setTableView()
         hkManager.requestPermission()
     }
@@ -32,7 +31,7 @@ class ViewController: UIViewController {
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return HKQuantityTypeIdentifierTitles.count + HKCategoryTypeIdentifierTitles.count
+        return HKQuantityTypeIdentifierTitles.count + HKCategoryTypeIdentifierTitles.count + HKCharacteristicTypeIdentifierTitles.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -41,9 +40,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             let text = HKQuantityTypeIdentifierTitles[indexPath.row].rawValue
             let new = text.replacingOccurrences(of: "HKQuantityTypeIdentifier", with: "")
             cell.textLabel?.text = new
-        } else {
+        } else if indexPath.row < HKQuantityTypeIdentifierTitles.count + HKCategoryTypeIdentifierTitles.count {
             let text = HKCategoryTypeIdentifierTitles[indexPath.row - HKQuantityTypeIdentifierTitles.count].rawValue
             let new = text.replacingOccurrences(of: "HKCategoryTypeIdentifier", with: "")
+            cell.textLabel?.text = new
+        } else {
+            let text = HKCharacteristicTypeIdentifierTitles[indexPath.row - HKQuantityTypeIdentifierTitles.count - HKCategoryTypeIdentifierTitles.count].rawValue
+            let new = text.replacingOccurrences(of: "HKCharacteristicTypeIdentifier", with: "")
             cell.textLabel?.text = new
         }
         cell.selectionStyle = .none
@@ -56,9 +59,14 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             hkManager.fetchData(HKQuantityTypeIdentifierTitles[indexPath.row]) { res in
                 resultVC.received = res
             }
-        } else {
+        } else if indexPath.row < HKQuantityTypeIdentifierTitles.count + HKCategoryTypeIdentifierTitles.count {
             hkManager.fetchData(HKCategoryTypeIdentifierTitles[indexPath.row - HKQuantityTypeIdentifierTitles.count]) { res in
                 resultVC.received = res
+            }
+        } else {
+            hkManager.fetchData(HKCharacteristicTypeIdentifierTitles[indexPath.row - HKQuantityTypeIdentifierTitles.count - HKCategoryTypeIdentifierTitles.count]) { res in
+                print(res)
+                resultVC.received = [res]
             }
         }
         self.navigationController?.pushViewController(resultVC, animated: true)
