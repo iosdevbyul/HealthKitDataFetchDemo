@@ -53,9 +53,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let resultVC = ResultViewController()
         if indexPath.row < HKQuantityTypeIdentifierTitles.count {
-            hkManager.fetchData(HKQuantityTypeIdentifierTitles[indexPath.row])
+            hkManager.fetchData(HKQuantityTypeIdentifierTitles[indexPath.row]) { res in
+                resultVC.received = res
+            }
         } else {
-            hkManager.fetchData(HKCategoryTypeIdentifierTitles[indexPath.row - HKQuantityTypeIdentifierTitles.count])
+            hkManager.fetchData(HKCategoryTypeIdentifierTitles[indexPath.row - HKQuantityTypeIdentifierTitles.count]) { res in
+                resultVC.received = res
+            }
         }
         self.navigationController?.pushViewController(resultVC, animated: true)
     }

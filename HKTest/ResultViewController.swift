@@ -10,9 +10,17 @@ import UIKit
 class ResultViewController: UIViewController {
     
     let resultLabel = UILabel()
-    var received: String = "" {
+    var received: [String] = [] {
         didSet {
-            resultLabel.text = received
+            if received.count == 0 {
+                resultLabel.text = "데이터가 없습니다"
+            } else {
+                var str = ""
+                for receive in received {
+                    str = str + "\n" + receive
+                }
+                resultLabel.text = str
+            }
         }
     }
 
@@ -33,19 +41,9 @@ class ResultViewController: UIViewController {
         resultLabel.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         resultLabel.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
         resultLabel.numberOfLines = 0
+        resultLabel.textAlignment = .center
     }
-    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
     deinit {
         print("ResultVC deinit")
     }

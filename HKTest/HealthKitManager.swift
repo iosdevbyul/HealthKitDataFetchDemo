@@ -41,7 +41,9 @@ class HealthKitManager {
         }
     }
         
-    func fetchData(_ input: HKQuantityTypeIdentifier) {
+    func fetchData(_ input: HKQuantityTypeIdentifier, completion: @escaping ([String]) -> Void) {
+        var returnStr: [String] = []
+
         guard let healthStore = healthStore else {
             return
         }
@@ -52,68 +54,27 @@ class HealthKitManager {
         //Int(HKObjectQueryNoLimit)
         let query = HKSampleQuery(sampleType: sampleType, predicate: nil, limit: 1, sortDescriptors: nil) {
             query, results, error in
-            
             guard let samples = results as? [HKQuantitySample] else {
                 // Handle any errors here.
-                print("????")
+                debugPrint(error?.localizedDescription as Any)
                 return
             }
             print("number of samples : ", samples.count)
             for sample in samples {
-                // Process each sample here.
-                print("sample : ", sample.quantity)
+                returnStr.append("\(sample.quantity)")
             }
-            
-            // The results come back on an anonymous background queue.
-            // Dispatch to the main queue before modifying the UI.
-            
-            DispatchQueue.main.async {
-                // Update the UI here.
-            }
-        }
-        
-        healthStore.execute(query)
 
-//        print(input)
-//                
-//        guard let healthStore = healthStore else {
-//            return
-//        }
-//        let bodyMass1 = HKObjectType.quantityType(forIdentifier: input)
-//        print(bodyMass1)
-//        
-//        
-//        //1
-//        guard let bodyMass = HKObjectType.quantityType(forIdentifier: input) else {
-//            print("*** Unable to create a \(input.rawValue) ***")
-//            return
-//        }
-//        
-//        var interval = DateComponents()
-//        interval.day = 1
-//        
-//        var anchorComponents = Calendar.current.dateComponents([.day, .month, .year], from: Date())
-//        anchorComponents.hour = 0
-//        let anchorDate = Calendar.current.date(from: anchorComponents)!
-//        
-//        let query1 = HKStatisticsCollectionQuery(quantityType: bodyMass,
-//                                                    quantitySamplePredicate: nil,
-//                                                    options: [.mostRecent],
-//                                                    anchorDate: anchorDate,
-//                                                    intervalComponents: interval)
-//        
-//        query1.initialResultsHandler = { _, results, error in
-//                guard let results = results else {
-//                    debugPrint(error as Any)
-//                    return
-//                }
-//            print("results 1",results.statistics())
-//        }
-//        
-//        healthStore.execute(query1)
+            DispatchQueue.main.async {
+                completion(returnStr)
+            }
+            
+        }
+        healthStore.execute(query)
     }
     
-    func fetchData(_ input: HKCategoryTypeIdentifier) {
+    func fetchData(_ input: HKCategoryTypeIdentifier, completion: @escaping ([String]) -> Void) {
+        var returnStr: [String] = []
+        
         guard let healthStore = healthStore else {
             return
         }
@@ -126,21 +87,16 @@ class HealthKitManager {
             query, results, error in
             
             guard let samples = results as? [HKQuantitySample] else {
-                // Handle any errors here.
-                print("????")
+                debugPrint(error?.localizedDescription as Any)
                 return
             }
             print("number of samples : ", samples.count)
             for sample in samples {
-                // Process each sample here.
-                print("sample : ", sample.quantity)
+                returnStr.append("\(sample.quantity)")
             }
-            
-            // The results come back on an anonymous background queue.
-            // Dispatch to the main queue before modifying the UI.
-            
+
             DispatchQueue.main.async {
-                // Update the UI here.
+                completion(returnStr)
             }
         }
         
